@@ -1,5 +1,5 @@
 function Car(genes){
-    this.pos = createVector(0, height/2);
+    this.pos = createVector(0, height/2 - car_w/2);
     this.acc = createVector(0, 0);
     this.vel = createVector(0, 0);
     
@@ -13,6 +13,7 @@ function Car(genes){
     
     this.genes = genes || [];
     this.next_genes = [];
+    this.update_counter = 0
     
     
     this.applyForce = function(force){
@@ -22,10 +23,41 @@ function Car(genes){
     this.update = function(){
         if (this.is_dead) return;
         
+        var impulse;
+        
+        if (this.genes.length > 0 && this.genes.length > this.update_counter){
+            impulse = this.genes[this.update_counter];
+        }
+        else {
+            impulse = random(-5, 5); // random rotation
+        }
+        this.next_genes.push(impulse); // save for further generations
+        
+        if (this.current_angle + impulse < this.maximum_angle){
+            this.current_angle += impulse;
+        }
+        else {
+            this.current_angle += this.maximum_angle - this.current_angle;
+        }
+        
+        // impulse. ...
+        
+        if (this.update_counter == 0){
+            this.applyForce([1.2, 0]);
+        }
+        
+        if (this.current_angle != 0){
+            this.vel.rotate(radians(impulse));
+            
+        }
+//        console.log(this.vel)
+        
         
         this.vel.add(this.acc);
         this.pos.add(this.vel);
         this.acc = createVector(0, 0);
+        
+        this.update_counter++;
     }
     
     this.evaluate = function(){
@@ -51,25 +83,26 @@ function Car(genes){
     }
     
     this.show = function(){
-//        fill(this.color);
-        rect(this.pos.x, this.pos.y, car_h, car_w);
+        push();
+        translate(this.pos.x, this.pos.y);
+        rotate(radians(this.current_angle))
+        rect(0, 0, car_h, car_w);
         tire_w = 20;
         tire_h = 10;
 
         // front up
         push();
-            fill(255, 0, 0);
+            fill(255, 0, 0, 100);
             push();
-                translate(this.pos.x + 10 + tire_w/2, this.pos.y -5 + tire_h/2);
+                translate(10 + tire_w/2, -5 + tire_h/2);
                 rotate(radians(this.current_angle));
                 rect(-tire_w/2, -tire_h/2, tire_w, tire_h);
             pop();
 
             // front down
             push();
-                translate(this.pos.x + 10 + tire_w/2, this.pos.y -5 + tire_h/2 + car_w);
+                translate(10 + tire_w/2, -5 + tire_h/2 + car_w);
                 rotate(radians(this.current_angle))
-//                rect(0, car_w, tire_w, tire_h);
                 rect(-tire_w/2, -tire_h/2, tire_w, tire_h);
             pop();
         
@@ -77,9 +110,11 @@ function Car(genes){
         
         // rare 
         push();
-        translate(this.pos.x + 10 + axis_h, this.pos.y -5);
-        rect(0, 0, tire_w, tire_h);
-        rect(0, car_w, tire_w, tire_h);
+            translate(10 + axis_h, -5);
+            rect(0, 0, tire_w, tire_h);
+            rect(0, car_w, tire_w, tire_h);
+        pop();
+        
         pop();
     }
     

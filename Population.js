@@ -1,6 +1,7 @@
 function Population(cnt){
     this.cnt = cnt;
-    this.lifespan = 500;
+    this.initial_lifespan = 300;
+    this.lifespan = this.initial_lifespan;
     
     this.members = [];
     this.mating_pool = [];
@@ -13,6 +14,7 @@ function Population(cnt){
     this.update = function(){
         cnt_dead = 0;
         for (var i = 0; i < this.members.length; i++){
+//            this.members[i].applyForce([random(0, 0.1), 0]);
             this.members[i].update();
             if (this.members[i].is_dead) cnt_dead++;
         }
@@ -75,9 +77,7 @@ function Population(cnt){
             for (var j = 0; j < split_mid; j++){
                 next_genes[j] = parentA[j];
                 if (random(100) < iMutationRate){
-                    var angle = radians(random(-5, 5));
-                    console.log('mutation! angle ', angle)
-                    next_genes[j].rotate(angle);
+                    //@TODO: mutation
                 }
             }
             for (var j = split_mid; j < longer_parent.length; j++){
@@ -89,9 +89,7 @@ function Population(cnt){
                 }
                 
                 if (random(100) < iMutationRate){
-                    var angle = radians(random(-5, 5));
-                    console.log('mutation! angle ', angle)
-                    next_genes[j].rotate(angle);
+                    //@TODO: mutation
                 }
             }
 //            console.log('elected genes', next_genes)
@@ -101,6 +99,6 @@ function Population(cnt){
     }
     
     this.resurrect = function(){
-        this.lifespan = 500;
+        this.lifespan = this.initial_lifespan;
     }
 }
