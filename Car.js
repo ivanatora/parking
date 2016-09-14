@@ -1,6 +1,9 @@
 function Car(genes){
     this.pos = createVector(width/2, height);
     this.acc = createVector(0, 0);
+    this.vel = createVector(0, 0);
+    
+    this.color = color(random(255), random(255), random(255));
     
     this.fitness = 1; 
     this.is_dead = false;

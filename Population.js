@@ -7,7 +7,7 @@ function Population(cnt){
     this.last_mating_pool = [];
     
     for (var i = 0; i < this.cnt; i++){
-        this.members.push(new Jumper());
+        this.members.push(new Car());
     }
     
     this.update = function(){
@@ -31,7 +31,7 @@ function Population(cnt){
     
     this.evaluate = function(){
         $('#fitnesses').empty();
-        $('#fitnesses').append('<tr><th>Jumper</th><th>Fitness</th><th>Ramp jump score</th></tr>');
+        $('#fitnesses').append('<tr><th>Car</th><th>Fitness</th></tr>');
 
         var sum_fitness = 0;
         for (var i = 0; i < this.members.length; i++){
