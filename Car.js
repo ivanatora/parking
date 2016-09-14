@@ -3,8 +3,11 @@ function Car(genes){
     this.acc = createVector(0, 0);
     this.vel = createVector(0, 0);
     
-    this.maximum_angle = 30;
-    this.current_angle = 0;
+//    this.maximum_wheel_angle = 30;
+    this.maximum_wheel_angle = 60;
+    this.current_wheel_angle = 0;
+    this.car_angle = 0;
+    this.current_turning_radius = 0;
     
     this.color = color(random(255), random(255), random(255));
     
@@ -33,22 +36,29 @@ function Car(genes){
         }
         this.next_genes.push(impulse); // save for further generations
         
-        if (this.current_angle + impulse < this.maximum_angle){
-            this.current_angle += impulse;
+        if (this.current_wheel_angle + impulse < this.maximum_wheel_angle){
+            this.current_wheel_angle += impulse;
         }
         else {
-            this.current_angle += this.maximum_angle - this.current_angle;
+            this.current_wheel_angle += this.maximum_wheel_angle - this.current_wheel_angle;
         }
         
         // impulse. ...
         
         if (this.update_counter == 0){
-            this.applyForce([1.2, 0]);
+            this.applyForce([1, 0]);
         }
         
-        if (this.current_angle != 0){
+        if (this.current_wheel_angle != 0){
             this.vel.rotate(radians(impulse));
+            this.car_angle = this.current_wheel_angle;
             
+            this.current_turning_radius = axis_h / sin(radians(this.current_wheel_angle));
+            turning_circle_len = abs(PI * 2 * this.current_turning_radius);
+            console.log('angle is', this.current_wheel_angle, 'radius is', this.current_turning_radius, 'circle len is', turning_circle_len)
+            
+            // speed is constant 1
+            omega = 1 / turning_circle_len;
         }
 //        console.log(this.vel)
         
@@ -83,37 +93,42 @@ function Car(genes){
     }
     
     this.show = function(){
-        push();
-        translate(this.pos.x, this.pos.y);
-        rotate(radians(this.current_angle))
-        rect(0, 0, car_h, car_w);
         tire_w = 20;
         tire_h = 10;
-
-        // front up
+        dfb = 10; // distance wheel - front bumber
+        dra = dfb + axis_h; // distance to rare axle
+            
         push();
-            fill(255, 0, 0, 100);
+//            translate(20, 20);
+//            rotate(radians(this.car_angle))
+            translate(this.pos.x + dfb, this.pos.y);
+
+            rect(0, 0, car_h, car_w);
+
+            // front up
             push();
-                translate(10 + tire_w/2, -5 + tire_h/2);
-                rotate(radians(this.current_angle));
-                rect(-tire_w/2, -tire_h/2, tire_w, tire_h);
+                fill(255, 0, 0, 100);
+                push();
+                    translate(dfb + tire_w/2, -5 + tire_h/2);
+                    rotate(radians(this.current_wheel_angle));
+                    rect(-tire_w/2, -tire_h/2, tire_w, tire_h);
+                pop();
+
+                // front down
+                push();
+                    translate(dfb + tire_w/2, -5 + tire_h/2 + car_w);
+                    rotate(radians(this.current_wheel_angle))
+                    rect(-tire_w/2, -tire_h/2, tire_w, tire_h);
+                pop();
+
             pop();
 
-            // front down
+            // rare 
             push();
-                translate(10 + tire_w/2, -5 + tire_h/2 + car_w);
-                rotate(radians(this.current_angle))
-                rect(-tire_w/2, -tire_h/2, tire_w, tire_h);
+                translate(dra, -5);
+                rect(0, 0, tire_w, tire_h);
+                rect(0, car_w, tire_w, tire_h);
             pop();
-        
-        pop();
-        
-        // rare 
-        push();
-            translate(10 + axis_h, -5);
-            rect(0, 0, tire_w, tire_h);
-            rect(0, car_w, tire_w, tire_h);
-        pop();
         
         pop();
     }
