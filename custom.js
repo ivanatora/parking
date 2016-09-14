@@ -1,7 +1,7 @@
 iMutationRate = 1; //%
 iPopulationSize = 2;
 bFinished = false;
-pop = null;
+population = null;
 population_number = 0;
 obstacles = [];
 current_record = 0;
@@ -16,22 +16,23 @@ targets = [];
 Задна следа	1499 мм.
 */
 car_scale = 2;
-car_w = 17 * car_scale;;
-car_h = 46 * car_scale;;
+car_w = 17 * car_scale;
+car_h = 46 * car_scale;
+axis_h = 27 * car_scale;
 
 function setup() {
     iMaxFitness = 0;
     aSpawningPool = [];
     iPopulationNumber = 0;
     bFinished = false;
-    pop = null;
+    population = null;
     
     createCanvas(480, 200);
     background(0);
     
     targets = [
-        createVector(140, height - 25),
-        createVector(200, height - 25),
+        createVector(260, height - 25),
+        createVector(260 + axis_h, height - 25),
     ];
     
     generate_obstacles();
@@ -42,31 +43,32 @@ function setup() {
 function draw() {
     fill(0);
     background(0);
-    noStroke();
+//    noStroke();
+
+    generate_oseva_linia();
+    generate_targets();
     
-    if (! pop){
-        pop = new Population(iPopulationSize);
+    if (! population){
+        population = new Population(iPopulationSize);
     }
     
-    pop.update();
-    pop.show();
+    population.update();
+    population.show();
     
     for (var i = 0; i < obstacles.length; i++){
         obstacles[i].show();
     }
     
-    pop.lifespan--;
-    if (pop.lifespan <= 0){
-        pop.evaluate();
-        pop.crossover();
-        pop.resurrect();
+    population.lifespan--;
+    if (population.lifespan <= 0){
+        population.evaluate();
+        population.crossover();
+        population.resurrect();
         
         $('.population_number').html(population_number++);
         $('.record').html(current_record);
     }
     
-    generate_oseva_linia();
-    generate_targets();
 }
 
 function generate_obstacles() {
@@ -76,7 +78,7 @@ function generate_obstacles() {
     
     // parking space here
     
-    var obstacle2 = new Obstacle(createVector(230, height - 10 - car_w), car_h, car_w);
+    var obstacle2 = new Obstacle(createVector(130, height - 10 - car_w), car_h, car_w);
     obstacles.push(obstacle2);
     
     var obstacle3 = new Obstacle(createVector(230 + 30 + car_h, height - 10 - car_w), car_h, car_w);
