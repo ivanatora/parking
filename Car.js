@@ -33,6 +33,7 @@ function Car(genes){
         }
         else {
             impulse = random(-5, 5); // random rotation
+//            impulse = 1;
         }
         this.next_genes.push(impulse); // save for further generations
         
@@ -40,7 +41,7 @@ function Car(genes){
             this.current_wheel_angle += impulse;
         }
         else {
-            this.current_wheel_angle += this.maximum_wheel_angle - this.current_wheel_angle;
+            this.current_wheel_angle = this.maximum_wheel_angle;
         }
         
         // impulse. ...
@@ -55,10 +56,21 @@ function Car(genes){
             
             this.current_turning_radius = axis_h / sin(radians(this.current_wheel_angle));
             turning_circle_len = abs(PI * 2 * this.current_turning_radius);
-            console.log('angle is', this.current_wheel_angle, 'radius is', this.current_turning_radius, 'circle len is', turning_circle_len)
+            arc_angle = 1 / this.current_turning_radius;
+            console.log('angle is', this.current_wheel_angle, 'radius is', this.current_turning_radius, 'circle len is', turning_circle_len, 'arc angle', degrees(arc_angle))
+//            new_x = this.current_turning_radius * cos(arc_angle);
+//            new_y = this.current_turning_radius * sin(arc_angle);
+//            console.log(new_x, new_y)
             
-            // speed is constant 1
-            omega = 1 / turning_circle_len;
+            circle_pos = this.pos.copy();
+            circle_pos.setMag(this.current_turning_radius)
+            line(this.pos.x, this.pos.y, circle_pos.x, circle_pos.y)
+            console.log('pos', this.pos, 'circle', circle_pos)
+            
+//            this.pos.x = circle_pos.x + this.current_turning_radius * cos(arc_angle);
+//            this.pos.y = circle_pos.y + this.current_turning_radius * sin(arc_angle);
+//            console.log('new pos', this.pos)
+            
         }
 //        console.log(this.vel)
         
