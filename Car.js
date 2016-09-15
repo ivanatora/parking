@@ -20,8 +20,9 @@ function Car(genes){
     
     this.tire_w = 20;
     this.tire_h = 10;
-    this.dfb = 20; // distance front bumber -> front axle
-    this.dra = this.dfb + axis_h; // distance front bumber -> rare axle
+    this.dfb = 20; // distance front bumper -> front axle
+    this.dra = this.dfb + axis_h; // distance front bumper -> rare axle
+    this.drb = car_h - this.dra; // distance rare bumper -> rare axle
     
     
     this.applyForce = function(force){
@@ -66,23 +67,24 @@ function Car(genes){
             
             circle_pos = this.pos.copy();
             circle_pos.setMag(this.current_turning_radius)
-            line(this.pos.x, this.pos.y, circle_pos.x, circle_pos.y)
+//            line(this.pos.x, this.pos.y, circle_pos.x, circle_pos.y)
             //console.log('pos', this.pos, 'circle', circle_pos)
             
             rare_a = this.pos.copy();
-            rare_a.x += 10 + axis_h + this.tire_w / 2;
+            rare_a.x = car_h / 2 - this.drb;
+            rare_a.y = -car_w / 2;
             
             rare_b = this.pos.copy();
-            rare_b.x += 10 + axis_h + this.tire_w / 2;
-            rare_b.y += car_w;
+            rare_b.x = car_h / 2 - this.drb;
+            rare_b.y = car_w / 2;
             
-//            push();
-//            translate(this.pos, this.pos);
-//            rare_a.rotate(radians(this.car_angle));
-//            rare_b.rotate(radians(this.car_angle));
-//            stroke(255, 0, 255);
-//            line(rare_a.x, rare_a.y, rare_b.x, rare_b.y)
-//            pop();
+            push();
+            translate(this.pos.x, this.pos.y);
+            rare_a.rotate(radians(this.car_angle));
+            rare_b.rotate(radians(this.car_angle));
+            stroke(255, 0, 255);
+            line(rare_a.x, rare_a.y, rare_b.x, rare_b.y)
+            pop();
             
             
         }
