@@ -6,6 +6,6 @@ function Obstacle(pos, w, h){
     this.show = function(){
         stroke(255);
         fill(255, 0, 0);
-        rect(this.pos.x, this.pos.y, this.w, this.h);
+        rect(this.pos.x + this.w/2, this.pos.y + this.h/2, this.w, this.h);
     }
 }

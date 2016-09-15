@@ -1,5 +1,5 @@
 function Car(genes){
-    this.pos = createVector(0, height/2 - car_w/2);
+    this.pos = createVector(car_h/2, height/2);
     this.acc = createVector(0, 0);
     this.vel = createVector(0, 0);
     
@@ -17,6 +17,11 @@ function Car(genes){
     this.genes = genes || [];
     this.next_genes = [];
     this.update_counter = 0
+    
+    this.tire_w = 20;
+    this.tire_h = 10;
+    this.dfb = 20; // distance front bumber -> front axle
+    this.dra = this.dfb + axis_h; // distance front bumber -> rare axle
     
     
     this.applyForce = function(force){
@@ -52,24 +57,33 @@ function Car(genes){
         
         if (this.current_wheel_angle != 0){
             this.vel.rotate(radians(impulse));
-            this.car_angle = this.current_wheel_angle;
+            this.car_angle = -this.current_wheel_angle;
             
             this.current_turning_radius = axis_h / sin(radians(this.current_wheel_angle));
             turning_circle_len = abs(PI * 2 * this.current_turning_radius);
             arc_angle = 1 / this.current_turning_radius;
             console.log('angle is', this.current_wheel_angle, 'radius is', this.current_turning_radius, 'circle len is', turning_circle_len, 'arc angle', degrees(arc_angle))
-//            new_x = this.current_turning_radius * cos(arc_angle);
-//            new_y = this.current_turning_radius * sin(arc_angle);
-//            console.log(new_x, new_y)
             
             circle_pos = this.pos.copy();
             circle_pos.setMag(this.current_turning_radius)
             line(this.pos.x, this.pos.y, circle_pos.x, circle_pos.y)
-            console.log('pos', this.pos, 'circle', circle_pos)
+            //console.log('pos', this.pos, 'circle', circle_pos)
             
-//            this.pos.x = circle_pos.x + this.current_turning_radius * cos(arc_angle);
-//            this.pos.y = circle_pos.y + this.current_turning_radius * sin(arc_angle);
-//            console.log('new pos', this.pos)
+            rare_a = this.pos.copy();
+            rare_a.x += 10 + axis_h + this.tire_w / 2;
+            
+            rare_b = this.pos.copy();
+            rare_b.x += 10 + axis_h + this.tire_w / 2;
+            rare_b.y += car_w;
+            
+//            push();
+//            translate(this.pos, this.pos);
+//            rare_a.rotate(radians(this.car_angle));
+//            rare_b.rotate(radians(this.car_angle));
+//            stroke(255, 0, 255);
+//            line(rare_a.x, rare_a.y, rare_b.x, rare_b.y)
+//            pop();
+            
             
         }
 //        console.log(this.vel)
@@ -105,15 +119,15 @@ function Car(genes){
     }
     
     this.show = function(){
-        tire_w = 20;
-        tire_h = 10;
-        dfb = 10; // distance wheel - front bumber
-        dra = dfb + axis_h; // distance to rare axle
+        
+        fill(255);
+        ellipse(this.pos.x, this.pos.y, 10, 10);
+        noFill();
             
         push();
 //            translate(20, 20);
-//            rotate(radians(this.car_angle))
-            translate(this.pos.x + dfb, this.pos.y);
+            translate(this.pos.x, this.pos.y);
+            rotate(radians(this.car_angle))
 
             rect(0, 0, car_h, car_w);
 
@@ -121,25 +135,25 @@ function Car(genes){
             push();
                 fill(255, 0, 0, 100);
                 push();
-                    translate(dfb + tire_w/2, -5 + tire_h/2);
+                    translate(this.dfb - car_h/2, -car_w/2);
                     rotate(radians(this.current_wheel_angle));
-                    rect(-tire_w/2, -tire_h/2, tire_w, tire_h);
+                    rect(0, 0, this.tire_w, this.tire_h);
                 pop();
 
                 // front down
                 push();
-                    translate(dfb + tire_w/2, -5 + tire_h/2 + car_w);
+                    translate(this.dfb - car_h/2, +car_w/2);
                     rotate(radians(this.current_wheel_angle))
-                    rect(-tire_w/2, -tire_h/2, tire_w, tire_h);
+                    rect(0, 0, this.tire_w, this.tire_h);
                 pop();
 
             pop();
 
             // rare 
             push();
-                translate(dra, -5);
-                rect(0, 0, tire_w, tire_h);
-                rect(0, car_w, tire_w, tire_h);
+                translate(this.dra - car_h/2, -car_w/2);
+                rect(0, 0, this.tire_w, this.tire_h);
+                rect(0, car_w, this.tire_w, this.tire_h);
             pop();
         
         pop();

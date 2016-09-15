@@ -21,6 +21,7 @@ car_h = 46 * car_scale;
 axis_h = 27 * car_scale;
 
 function setup() {
+    rectMode(CENTER);
     frameRate(5);
     iMaxFitness = 0;
     aSpawningPool = [];
