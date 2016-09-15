@@ -22,7 +22,7 @@ axis_h = 27 * car_scale;
 
 function setup() {
     rectMode(CENTER);
-    frameRate(5);
+    frameRate(1);
     iMaxFitness = 0;
     aSpawningPool = [];
     iPopulationNumber = 0;
@@ -75,6 +75,7 @@ function draw() {
 }
 
 function generate_obstacles() {
+    return;
     // bottom row
     var obstacle1 = new Obstacle(createVector(10, height - 10 - car_w), car_h, car_w);
     obstacles.push(obstacle1);
