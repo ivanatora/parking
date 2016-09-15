@@ -29,7 +29,8 @@ function setup() {
     bFinished = false;
     population = null;
     
-    createCanvas(480, 200);
+//    createCanvas(480, 200);
+    createCanvas(1000, 1000);
     background(0);
     
     targets = [

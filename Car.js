@@ -82,10 +82,32 @@ function Car(genes){
             translate(this.pos.x, this.pos.y);
             rare_a.rotate(radians(this.car_angle));
             rare_b.rotate(radians(this.car_angle));
-            stroke(255, 0, 255);
-            line(rare_a.x, rare_a.y, rare_b.x, rare_b.y)
-            pop();
+            axle_a_b = rare_b.copy().sub(rare_a)
+            axle_a_b.setMag(this.current_turning_radius).mult(-1);
+            this.current_turning_radius += car_w / 2;
+            radius_center = rare_a.copy().add(axle_a_b);
+            ellipse(radius_center.x, radius_center.y, this.current_turning_radius*2, this.current_turning_radius*2) // turning circle
+            line(rare_a.x, rare_a.y, radius_center.x, radius_center.y)
             
+            stroke(255, 0, 255);
+            line(rare_a.x, rare_a.y, rare_b.x, rare_b.y) // turning radius trough the rare axle // debug - OK
+            pop();
+
+            // get vector to vehicle center
+            center_translated = radius_center.add(this.pos);
+            line(center_translated.x, center_translated.y , this.pos.x, this.pos.y) // radius to the vehicle center // debug - OK
+            
+            cntr_to_pos = this.pos.copy().sub(center_translated);
+            console.log('cntr_to_pos = ', cntr_to_pos, 'heading ', cntr_to_pos.heading())
+//            line(0, 0, cntr_to_pos.x, cntr_to_pos.y)
+            
+            arc_angle = cntr_to_pos.heading() - arc_angle;
+//            arc_angle = - arc_angle + cntr_to_pos.heading();
+//            arc_angle = PI/6;
+            console.log('new angle', arc_angle)
+            new_pos = createVector(center_translated.x + this.current_turning_radius * cos(arc_angle), center_translated.y + this.current_turning_radius * sin(arc_angle));
+            ellipse(new_pos.x, new_pos.y, 20, 20)
+//            console.log('new angle', arc_angle, 'pos', this.pos, 'new', new_pos)
             
         }
 //        console.log(this.vel)
