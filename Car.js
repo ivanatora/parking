@@ -105,7 +105,7 @@ function Car(genes){
 
 
         if (this.current_wheel_angle > 0){
-            new_arc_angle = cntr_to_rac.heading() - 20*arc_angle;
+            new_arc_angle = cntr_to_rac.heading() - 20 * arc_angle;
             new_rac = createVector(center_translated.x + this.tr * cos(new_arc_angle), center_translated.y + this.tr * sin(new_arc_angle));
         }
         else {
@@ -115,10 +115,15 @@ function Car(genes){
             console.log('new angle', degrees(PI/2 - new_arc_angle))
         ellipse(new_rac.x, new_rac.y, 10, 10)// target
 
-        new_pos = this.pos.copy().sub(this.rac.sub(new_rac))
+        new_pos = this.pos.copy().sub(this.rac.copy().sub(new_rac))
         fill(0, 255, 0, 100);
         ellipse(new_pos.x, new_pos.y, 10, 10)
 //        this.pos = new_pos;
+
+        newrac_to_rac = this.rac.copy().sub(new_rac);
+        newrac_to_rac.rotate(this.car_angle);
+        console.log('r', this.rac, 'nr', new_rac)
+        this.pos.sub(newrac_to_rac)
         
 
         push(); // draw this.rac
